@@ -1,0 +1,525 @@
+/* ==================== GLOBAL ==================== */
+:root {
+  --ink: #0a3a60;
+  --s1: #0b4f82;
+  --s2: #2c86b8;
+  --s3: #9fd0dc;
+  --text: #f4f8fb;
+  --muted: rgba(244, 248, 251, .68);
+  --line: rgba(255, 255, 255, .16);
+  --pane: rgba(255, 255, 255, .07);
+  --sun: #ffd66b;
+  --font-display: 'Bricolage Grotesque', Georgia, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Figtree', system-ui, sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  padding-top: 60px;
+  overflow-x: hidden;
+  transition: background 1.2s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+:focus-visible {
+  outline: 2px solid var(--sun);
+  outline-offset: 3px;
+}
+
+.section-title {
+  font-weight: 500;
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+
+.text-muted-soft {
+  color: var(--muted) !important;
+}
+
+.bg-alt {
+  background: color-mix(in srgb, var(--ink) 90%, #fff);
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar {
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  transition: background-color 0.3s;
+}
+
+.navbar-brand {
+  font: 700 1.45rem var(--font-display);
+  letter-spacing: -.03em;
+}
+
+.navbar .nav-link {
+  font-weight: 500;
+  color: var(--muted);
+  border-radius: 99px;
+  padding: 0.4rem 0.85rem !important;
+  transition: 0.25s;
+}
+
+.navbar .nav-link:hover {
+  color: #fff;
+  background: var(--pane);
+}
+
+.navbar .nav-link.active {
+  color: #1a2438;
+  background: var(--sun);
+  font-weight: 600;
+}
+
+/* ==================== HERO / CUACA SEKARANG ==================== */
+.hero-section {
+  position: relative;
+  min-height: calc(100svh - 60px);
+  padding: 50px 0 60px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--s1), var(--s2) 62%, var(--s3));
+  transition: background 1.2s;
+}
+
+.layer {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.cloud {
+  background: rgba(255, 255, 255, .12);
+  filter: blur(30px);
+  border-radius: 50%;
+}
+
+.cloud-1 { width: 520px; height: 150px; top: 18%; left: -6%; }
+.cloud-2 { width: 640px; height: 190px; top: 52%; right: -10%; }
+
+.hero-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+.search-box input {
+  max-width: 420px;
+  border-radius: 99px;
+  padding: 0.8rem 1.3rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.search-box input::placeholder {
+  color: var(--muted);
+}
+
+.search-box input:focus {
+  background: rgba(255, 255, 255, .18);
+  color: #fff;
+  box-shadow: none;
+  border-color: var(--sun);
+}
+
+.btn-sun {
+  background: var(--sun);
+  color: #1a2438;
+  font-weight: 600;
+  border: 0;
+  border-radius: 99px;
+  padding: 0.8rem 1.5rem;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.btn-sun:hover {
+  background: var(--sun);
+  color: #1a2438;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+
+#searchMsg {
+  min-height: 24px;
+  font-size: .9rem;
+  color: #ffd0c8;
+}
+
+.place {
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+.temp {
+  font: 300 clamp(7.5rem, 24vw, 17rem)/.82 var(--font-display);
+  letter-spacing: -.06em;
+  margin: 18px 0 14px -.04em;
+}
+
+.temp sup {
+  font-size: .34em;
+  vertical-align: top;
+  position: relative;
+  top: .12em;
+  letter-spacing: 0;
+}
+
+.cond {
+  font: 500 clamp(1.6rem, 3.4vw, 2.4rem)/1.1 var(--font-display);
+}
+
+.chip {
+  padding: 7px 14px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid var(--line);
+  font-size: .9rem;
+  backdrop-filter: blur(6px);
+}
+
+.sun-arc svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.sun-times {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: .88rem;
+  margin-top: 4px;
+}
+
+/* ==================== ABOUT ==================== */
+.feature-icon {
+  color: var(--sun);
+  font-size: 1.6rem;
+  margin-right: 1rem;
+}
+
+/* ==================== PER JAM ==================== */
+.scroller {
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-color: var(--line) transparent;
+}
+
+.strip {
+  width: 1824px;
+  position: relative;
+}
+
+.strip svg {
+  display: block;
+  width: 1824px;
+  height: 100px;
+}
+
+.hours {
+  display: flex;
+}
+
+.hour-btn {
+  flex: 0 0 76px;
+  background: none;
+  border: 0;
+  border-top: 2px solid transparent;
+  color: inherit;
+  padding: 12px 0;
+  text-align: center;
+  cursor: pointer;
+  font: inherit;
+  transition: background .2s;
+}
+
+.hour-btn:hover {
+  background: var(--pane);
+}
+
+.hour-btn.selected {
+  background: var(--pane);
+  border-top-color: var(--sun);
+}
+
+.hour-btn b {
+  display: block;
+  font: 500 1.25rem var(--font-display);
+}
+
+.hour-btn .icon {
+  font-size: 1.5rem;
+  display: block;
+}
+
+.hour-btn small {
+  color: var(--muted);
+  font-size: .8rem;
+}
+
+.detail-box {
+  height: 100%;
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 20px;
+  transition: background .25s;
+}
+
+.detail-box:hover {
+  background: color-mix(in srgb, var(--ink) 85%, #fff);
+}
+
+.detail-box span {
+  display: block;
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+.detail-box b {
+  font: 500 1.5rem var(--font-display);
+}
+
+/* ==================== 5 HARI ==================== */
+.day-row {
+  display: grid;
+  grid-template-columns: 170px 44px 1fr 90px;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 8px;
+  border-top: 1px solid var(--line);
+  transition: background .25s;
+}
+
+.day-row:hover {
+  background: var(--pane);
+}
+
+.day-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.range-bar {
+  position: relative;
+  height: 8px;
+  border-radius: 9px;
+  background: var(--pane);
+}
+
+.range-bar i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 9px;
+  background: linear-gradient(90deg, #8fd3ff, var(--sun) 60%, #ff9b6b);
+}
+
+.day-temps {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.day-temps span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* ==================== KOTA BESAR ==================== */
+.city-row {
+  display: grid;
+  grid-template-columns: 1fr 60px 1.4fr 80px;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--line);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 20px 8px;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.city-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.city-row:hover {
+  background: var(--pane);
+  padding-left: 20px;
+}
+
+.city-row h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.city-bar {
+  height: 6px;
+  border-radius: 9px;
+  background: var(--pane);
+  position: relative;
+}
+
+.city-bar i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 9px;
+  background: linear-gradient(90deg, #8fd3ff, var(--sun), #ff9b6b);
+}
+
+.city-temp {
+  font: 500 2rem var(--font-display);
+  text-align: right;
+}
+
+/* ==================== GEMPA ==================== */
+.quake-mag {
+  font: 300 clamp(5rem, 14vw, 9rem)/.9 var(--font-display);
+  letter-spacing: -.05em;
+}
+
+.quake-img {
+  max-width: 100%;
+  max-height: 260px;
+  border-radius: 14px;
+  margin-top: 16px;
+}
+
+/* ==================== FAQ ==================== */
+.accordion {
+  --bs-accordion-bg: transparent;
+  --bs-accordion-border-color: var(--line);
+  --bs-accordion-btn-color: var(--text);
+  --bs-accordion-active-color: var(--sun);
+  --bs-accordion-active-bg: var(--pane);
+  --bs-accordion-btn-focus-box-shadow: none;
+}
+
+.accordion-button {
+  font: 500 1.15rem var(--font-display);
+  background: transparent;
+}
+
+.accordion-button:not(.collapsed) {
+  box-shadow: none;
+}
+
+.accordion-body {
+  color: var(--muted);
+}
+
+/* ==================== CONTACT ==================== */
+.contact-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--sun);
+  color: #1a2438;
+  border-radius: 50%;
+}
+
+.contact-card {
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.contact-card .form-control {
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid var(--line);
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+}
+
+.contact-card .form-control::placeholder {
+  color: var(--muted);
+}
+
+.contact-card .form-control:focus {
+  border-color: var(--sun);
+  box-shadow: none;
+}
+
+/* ==================== FOOTER ==================== */
+footer {
+  background: color-mix(in srgb, var(--ink) 80%, #000);
+  border-top: 1px solid var(--line);
+}
+
+footer a {
+  transition: .2s;
+}
+
+footer a:hover {
+  color: #fff !important;
+}
+
+/* ==================== BACK TO TOP ==================== */
+#backToTop {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 46px;
+  height: 46px;
+  display: none;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  background: var(--sun);
+  color: #1a2438;
+  border: 0;
+  opacity: 0.9;
+}
+
+#backToTop:hover {
+  opacity: 1;
+  background: var(--sun);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 640px) {
+  .day-row {
+    grid-template-columns: 1fr 34px 90px;
+    gap: 10px;
+  }
+  .day-row .range-bar {
+    grid-column: 1 / -1;
+    order: 5;
+  }
+  .city-row {
+    grid-template-columns: 1fr 44px 70px;
+  }
+  .city-bar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

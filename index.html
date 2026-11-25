@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Langit - Cuaca Indonesia, Jam demi Jam</title>
+  <meta name="description" content="Cuaca Indonesia jam demi jam: prakiraan per jam, 5 hari, kualitas udara, dan info gempa BMKG">
+
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- AOS Animate on Scroll -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet kustom -->
+  <link href="style.css" rel="stylesheet">
+</head>
+<body data-bs-spy="scroll" data-bs-target="#mainNavbar" data-bs-offset="100" tabindex="0">
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav id="mainNavbar" class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#home">langit</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Buka menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Sekarang</a></li>
+          <li class="nav-item"><a class="nav-link" href="#hourly">Per jam</a></li>
+          <li class="nav-item"><a class="nav-link" href="#daily">5 hari</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cities">Kota besar</a></li>
+          <li class="nav-item"><a class="nav-link" href="#quake">Gempa</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">Tentang</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO / CUACA SEKARANG ==================== -->
+  <section id="home" class="hero-section">
+    <div class="layer cloud cloud-1" data-speed=".12"></div>
+    <div class="layer cloud cloud-2" data-speed=".22"></div>
+
+    <div class="container">
+      <div class="row align-items-end g-4">
+        <div class="col-lg-7">
+          <form class="search-box d-flex flex-column flex-sm-row gap-2 mb-2" id="searchForm">
+            <input class="form-control" type="search" id="searchInput" placeholder="Cari kota atau wilayah, mis. Yogyakarta" aria-label="Cari kota">
+            <button class="btn btn-sun" type="submit">Cari cuaca</button>
+          </form>
+          <div id="searchMsg" role="status"></div>
+
+          <div class="place" id="placeName">Memuat…</div>
+          <div class="temp" id="tempNow">--<sup>°</sup></div>
+          <div class="cond" id="condNow"></div>
+          <div class="d-flex flex-wrap gap-2 mt-4" id="chips"></div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="sun-arc" data-speed=".06">
+            <svg viewBox="0 0 400 210" aria-label="Posisi matahari hari ini">
+              <path d="M20 190 A180 180 0 0 1 380 190" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2" stroke-dasharray="3 7" stroke-linecap="round"/>
+              <line x1="0" y1="190" x2="400" y2="190" stroke="rgba(255,255,255,.35)"/>
+              <circle id="sunDot" cx="20" cy="190" r="15" fill="#ffd66b"/>
+            </svg>
+            <div class="sun-times"><span id="sunrise">--:--</span><span id="sunset">--:--</span></div>
+            <p class="text-center text-muted-soft mt-2 mb-0" id="sunNote">Matahari terbit dan terbenam hari ini</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRAKIRAAN PER JAM ==================== -->
+  <section id="hourly" class="py-5">
+    <div class="container py-4">
+      <div data-aos="fade-up">
+        <h2 class="section-title mb-2">24 jam ke depan</h2>
+        <p class="text-muted-soft mb-4">Geser garis waktu, lalu pilih jam untuk melihat rincian: suhu terasa, angin, UV, jarak pandang, dan lainnya.</p>
+      </div>
+      <div class="scroller">
+        <div class="strip">
+          <svg id="tempCurve" viewBox="0 0 1824 100" preserveAspectRatio="none"></svg>
+          <div class="hours" id="hoursStrip"></div>
+        </div>
+      </div>
+      <div class="text-muted-soft my-3" id="hourLabel"></div>
+      <div class="row g-3" id="hourDetail"></div>
+    </div>
+  </section>
+
+  <!-- ==================== PRAKIRAAN 5 HARI ==================== -->
+  <section id="daily" class="py-5 bg-alt">
+    <div class="container py-4">
+      <div data-aos="fade-up">
+        <h2 class="section-title mb-2">Prakiraan 5 hari ke depan</h2>
+        <p class="text-muted-soft mb-4" id="dailySub">Rentang suhu terendah sampai tertinggi tiap hari.</p>
+      </div>
+      <div id="dailyList"></div>
+    </div>
+  </section>
+
+  <!-- ==================== 5 KOTA BESAR ==================== -->
+  <section id="cities" class="py-5">
+    <div class="container py-4">
+      <div class="d-flex flex-wrap justify-content-between align-items-end mb-4" data-aos="fade-up">
+        <div>
+          <h2 class="section-title mb-2">Cuaca 5 kota besar sekarang</h2>
+          <p class="text-muted-soft mb-0">Diperbarui otomatis tiap 5 menit. Pilih satu kota untuk melihat rinciannya. <span id="citiesUpdated"></span></p>
+        </div>
+        <button class="btn btn-outline-light btn-sm rounded-pill mt-3 mt-md-0" id="refreshCities">
+          <i class="bi bi-arrow-clockwise"></i> Perbarui
+        </button>
+      </div>
+      <div id="cityList"></div>
+    </div>
+  </section>
+
+  <!-- ==================== GEMPA TERKINI ==================== -->
+  <section id="quake" class="py-5 bg-alt">
+    <div class="container py-4">
+      <div data-aos="fade-up">
+        <h2 class="section-title mb-2">Gempa terkini</h2>
+        <p class="text-muted-soft mb-4">Data resmi BMKG, gempa terakhir yang tercatat di Indonesia.</p>
+      </div>
+      <div class="row align-items-center g-4">
+        <div class="col-md-auto">
+          <div class="quake-mag" id="quakeMag">--</div>
+        </div>
+        <div class="col-md" id="quakeBody">
+          <span class="text-muted-soft">Memuat data gempa…</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TENTANG APLIKASI ==================== -->
+  <section id="about" class="py-5">
+    <div class="container py-4">
+      <div class="row g-5" data-aos="fade-up">
+        <div class="col-lg-6">
+          <h2 class="section-title mb-3">Tentang Langit</h2>
+          <p class="text-muted-soft">Langit adalah aplikasi web cuaca untuk Indonesia. Warna halaman mengikuti waktu di kota yang kamu pilih: fajar, siang, senja, atau malam.</p>
+          <p class="text-muted-soft">Data cuaca dan kualitas udara dari Open-Meteo, info gempa dari BMKG.</p>
+        </div>
+        <div class="col-lg-6">
+          <div class="d-flex align-items-start mb-4">
+            <i class="bi bi-lightning-charge-fill feature-icon"></i>
+            <div>
+              <h6 class="mb-1">Real-time</h6>
+              <small class="text-muted-soft">Suhu, angin, UV, dan kualitas udara terbaru.</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-start mb-4">
+            <i class="bi bi-search feature-icon"></i>
+            <div>
+              <h6 class="mb-1">Cari kota mana pun</h6>
+              <small class="text-muted-soft">Dari kota besar sampai kabupaten kecil.</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-start">
+            <i class="bi bi-phone-fill feature-icon"></i>
+            <div>
+              <h6 class="mb-1">Nyaman di semua layar</h6>
+              <small class="text-muted-soft">Ponsel, tablet, dan desktop.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FAQ ==================== -->
+  <section id="faq" class="py-5 bg-alt">
+    <div class="container py-4">
+      <div class="text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Pertanyaan umum</h2>
+        <p class="text-muted-soft">Jawaban singkat untuk hal yang sering ditanyakan</p>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="accordion" id="faqAccordion" data-aos="fade-up">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                  Dari mana data cuaca berasal?
+                </button>
+              </h2>
+              <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Dari Open-Meteo, layanan data cuaca terbuka yang menggabungkan model prakiraan dari berbagai lembaga meteorologi.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                  Seberapa sering data diperbarui?
+                </button>
+              </h2>
+              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Data lima kota besar diperbarui otomatis tiap 5 menit. Data kota yang kamu cari diambil setiap kali kamu mencarinya.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                  Apa arti "terasa seperti"?
+                </button>
+              </h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Suhu yang dirasakan tubuh setelah memperhitungkan kelembapan dan angin. Di kota lembap seperti Makassar, angkanya sering lebih tinggi dari suhu udara.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                  Kota saya tidak ditemukan, bagaimana?
+                </button>
+              </h2>
+              <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Coba tulis nama yang lebih umum, misalnya nama kabupaten atau ibu kota provinsi, tanpa singkatan.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                  Apakah Langit gratis?
+                </button>
+              </h2>
+              <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Ya, gratis dan tanpa perlu akun.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT FORM ==================== -->
+  <section id="contact" class="py-5">
+    <div class="container py-4">
+      <div class="row g-5">
+        <div class="col-lg-5" data-aos="fade-right">
+          <h2 class="section-title mb-3">Kirim masukan</h2>
+          <p class="text-muted-soft mb-4">Menemukan data yang janggal atau punya ide fitur? Tulis di sini.</p>
+
+          <div class="d-flex align-items-start mb-3">
+            <div class="contact-icon me-3"><i class="bi bi-envelope"></i></div>
+            <div>
+              <h6 class="mb-0">Email</h6>
+              <small class="text-muted-soft">halo@langit.example</small>
+            </div>
+          </div>
+          <div class="d-flex align-items-start mb-3">
+            <div class="contact-icon me-3"><i class="bi bi-geo-alt"></i></div>
+            <div>
+              <h6 class="mb-0">Lokasi</h6>
+              <small class="text-muted-soft">Indonesia</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7" data-aos="fade-left">
+          <div class="contact-card p-4">
+            <form id="contactForm" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="contactName">Nama</label>
+                  <input type="text" class="form-control" id="contactName" required autocomplete="name" placeholder="Nama kamu">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="contactEmail">Email</label>
+                  <input type="email" class="form-control" id="contactEmail" required autocomplete="email" placeholder="nama@email.com">
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="contactMessage">Pesan</label>
+                  <textarea class="form-control" id="contactMessage" rows="5" required placeholder="Tulis pesanmu di sini..."></textarea>
+                </div>
+                <div class="col-12">
+                  <div id="formMsg" class="mb-2" role="status"></div>
+                  <button type="submit" class="btn btn-sun">
+                    <i class="bi bi-send me-1"></i> Kirim pesan
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="pt-5 pb-3">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <a class="navbar-brand text-white d-inline-block mb-2" href="#home">langit</a>
+          <p class="text-white-50 small">Cuaca Indonesia, jam demi jam. Data dari Open-Meteo dan BMKG.</p>
+        </div>
+        <div class="col-6 col-lg-3">
+          <h6 class="mb-3">Cuaca</h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="#hourly" class="text-white-50 text-decoration-none">Per jam</a></li>
+            <li class="mb-2"><a href="#daily" class="text-white-50 text-decoration-none">5 hari</a></li>
+            <li class="mb-2"><a href="#cities" class="text-white-50 text-decoration-none">Kota besar</a></li>
+            <li class="mb-2"><a href="#quake" class="text-white-50 text-decoration-none">Gempa</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-lg-3">
+          <h6 class="mb-3">Info</h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="#about" class="text-white-50 text-decoration-none">Tentang</a></li>
+            <li class="mb-2"><a href="#faq" class="text-white-50 text-decoration-none">FAQ</a></li>
+            <li class="mb-2"><a href="#contact" class="text-white-50 text-decoration-none">Kontak</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="border-secondary my-4">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-white-50">
+        <p class="mb-2 mb-md-0">&copy; 2026 Langit. Dibuat untuk pembelajaran.</p>
+        <p class="mb-0">
+          API:
+          <a href="https://open-meteo.com" target="_blank" rel="noopener" class="text-decoration-none" style="color:var(--sun)">Open-Meteo</a>,
+          <a href="https://data.bmkg.go.id" target="_blank" rel="noopener" class="text-decoration-none" style="color:var(--sun)">BMKG</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button id="backToTop" class="btn rounded-circle shadow" aria-label="Kembali ke atas">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMessage">Berhasil!</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Tutup"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Script kustom -->
+  <script src="script.js"></script>
+</body>
+</html>
